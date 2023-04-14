@@ -39,11 +39,7 @@ def get_authorization():
 
 
 
-
-
-
-
-# gets a list of user's playlist (NOT DONE)
+# gets a list of user's playlist 
 def get_playlists(token, offset, playlist_list_acc):
     user_headers = {
         "Authorization": "Bearer " + token,
@@ -285,8 +281,7 @@ def discover_weekly_playlist(token):
         "uris": discover_weekly_songs_uris
     })
 
-    error = requests.post("https://api.spotify.com/v1/playlists/" + playlist_id + "/tracks", user_body, headers=user_headers)
-    info_json = error.json()
+    add_request = requests.post("https://api.spotify.com/v1/playlists/" + playlist_id + "/tracks", user_body, headers=user_headers)
 
     print("The playlist was successfuly created/added to.")
     
