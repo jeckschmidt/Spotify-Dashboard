@@ -3,12 +3,7 @@ from urllib.parse import urlencode
 import base64
 import webbrowser
 import json
-
-
-
-# personalized spotify given credentials after making an app on the spotify for developers website
-CLIENT_ID = '24120c9b0e484e77af61e070bf899ae7'
-CLIENT_SECRET = 'bb7ef1395d7f40caa81bcdad4d9d2b21'
+from private.creds import CLIENT_ID, CLIENT_SECRET
 
 
 
@@ -45,7 +40,6 @@ def get_authorization():
 
 
 
-    print()
 
 
 
