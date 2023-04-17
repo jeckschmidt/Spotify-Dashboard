@@ -1,9 +1,14 @@
-import requests
 from urllib.parse import urlencode
 import base64
 import webbrowser
 import json
-from private.creds import CLIENT_ID, CLIENT_SECRET
+import requests
+
+
+
+# personalized spotify given credentials after making an app on the spotify for developers website
+CLIENT_ID = '24120c9b0e484e77af61e070bf899ae7'
+CLIENT_SECRET = 'bb7ef1395d7f40caa81bcdad4d9d2b21'
 
 
 
@@ -13,7 +18,7 @@ def get_authorization():
         "client_id": CLIENT_ID,
         "response_type": "code",
         "redirect_uri": "http://localhost:7777/callback",
-        "scope": "user-library-read user-read-currently-playing user-top-read playlist-read-private playlist-modify-public playlist-modify-private"
+        "scope": "user-library-read user-read-currently-playing user-top-read playlist-read-private playlist-modify-public playlist-modify-private user-read-playback-state"
     }
 
     webbrowser.open("https://accounts.spotify.com/authorize?" + urlencode(auth_headers))
@@ -39,7 +44,12 @@ def get_authorization():
 
 
 
-# gets a list of user's playlist 
+
+    print()
+
+
+
+# gets a list of user's playlist (NOT DONE)
 def get_playlists(token, offset, playlist_list_acc):
     user_headers = {
         "Authorization": "Bearer " + token,
@@ -82,17 +92,20 @@ def get_current_playing_song(token):
         "Content-Type": "application/json"
     }
 
-    user_currently_playing_response = requests.get("https://api.spotify.com/v1/me/player/currently-playing", headers=user_headers)
-    info_json = user_currently_playing_response.json()
-
-    if info_json['is_playing'] != True:
+    user_current_playback_state = requests.get("https://api.spotify.com/v1/me/player", headers=user_headers)
+    
+    if user_current_playback_state.status_code == 204:
         print("Nothing is currently playing\n")
     else:
-        track_name = info_json['item']['name']
-        artist_list = info_json['item']['artists']
-        artist_names = ", ".join([artist['name'] for artist in artist_list])
-        print("\nThe currently playing song is: " + track_name + " by " + artist_names + "\n")
-
+        user_currently_playing_response = requests.get("https://api.spotify.com/v1/me/player/currently-playing", headers=user_headers)
+        info_json = user_currently_playing_response.json()
+        if info_json['is_playing'] != True:
+            print("Nothing is currently playing\n")
+        else:
+            track_name = info_json['item']['name']
+            artist_list = info_json['item']['artists']
+            artist_names = ", ".join([artist['name'] for artist in artist_list])
+            print("\nThe currently playing song is: " + track_name + " by " + artist_names + "\n")
 
 
 # returns x number of user's liked songs
@@ -281,7 +294,8 @@ def discover_weekly_playlist(token):
         "uris": discover_weekly_songs_uris
     })
 
-    add_request = requests.post("https://api.spotify.com/v1/playlists/" + playlist_id + "/tracks", user_body, headers=user_headers)
+    error = requests.post("https://api.spotify.com/v1/playlists/" + playlist_id + "/tracks", user_body, headers=user_headers)
+    info_json = error.json()
 
     print("The playlist was successfuly created/added to.")
     
