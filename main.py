@@ -3,12 +3,7 @@ import base64
 import webbrowser
 import json
 import requests
-
-
-
-# personalized spotify given credentials after making an app on the spotify for developers website
-CLIENT_ID = '24120c9b0e484e77af61e070bf899ae7'
-CLIENT_SECRET = 'bb7ef1395d7f40caa81bcdad4d9d2b21'
+from private.creds import CLIENT_ID, CLIENT_SECRET
 
 
 
@@ -44,11 +39,6 @@ def get_authorization():
 
 
 
-
-    print()
-
-
-
 # gets a list of user's playlist (NOT DONE)
 def get_playlists(token, offset, playlist_list_acc):
     user_headers = {
@@ -69,7 +59,6 @@ def get_playlists(token, offset, playlist_list_acc):
 
     playlist_list_curr = []
     
-
 
     if info_json['next'] is None:
         for playlist in range(len(info_json['items'])):
@@ -142,21 +131,8 @@ def get_top_artists(token):
     }
 
     number_of_top_artists = input("How many? (max 50): ")
-
     time_range_input = input("long_term, medium_term, or short_term?: ")
-    #print("\n")
-    #time_range = ""
-    #if time_range_input == "long term":
-    #    time_range = "long_term"
-    #elif time_range_input == "medium term":
-    #    time_range = "medium_term"
-    #elif time_range_input == "short term":
-    #    time_range = "short_term"
-    #else:
-     #   print("Your input wasn't valid.")
-     #   get_top_artists(token)
-    
-
+  
     user_params = {
         "time_range": time_range_input,
         "limit": number_of_top_artists
